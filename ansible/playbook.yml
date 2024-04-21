@@ -1,0 +1,34 @@
+---
+- name: Install apache server
+  hosts: all    # target group defined in the inventory file
+  become: yes
+  tasks:
+    - name: install apache server
+      yum:
+        name: httpd
+        state: present
+
+    - name: Create HTML file
+      file:
+        path: /var/www/html/index.html
+        state: touch
+
+    - name: Write HTML content
+      blockinfile:
+        path: /var/www/html/index.html
+        create: yes
+        block: |
+          <html>
+          <head>
+          <title>My Web Application</title>
+          </head>
+          <body>
+          <h1>Welcome to My Web Application</h1>
+          </body>
+          </html>
+
+    - name: Start Apache HTTP Server
+      service:
+        name: httpd
+        state: started
+        enabled: yes
